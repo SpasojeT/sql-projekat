@@ -47,19 +47,19 @@ END $$
 DELIMITER ;
 
 CALL DELETE_SURVEY(1);
-
-DELIMITER //
+--------------------------------------------------------------------------------
+DELIMITER $$
 CREATE PROCEDURE GetSurveyFromQuestion(IN questionID INT(3), OUT surveyID INT)
 BEGIN
 	SELECT survey_id INTO surveyID
 	FROM questions WHERE question.id = questionID;
-END //
+END $$
 DELIMITER ;
-
-DELIMITER //
+--------------------------------------------------------------------------------
+DELIMITER $$
 CREATE PROCEDURE GetQuestionsFromSurvey(IN surveyID INT)
 BEGIN
 	SELECT * FROM questions WHERE survey_id = surveyID;
-END //
+END $$
 DELIMITER ;
 	
