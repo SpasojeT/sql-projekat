@@ -183,7 +183,7 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetSurveyFromQuestion`(IN questionID INT(3), OUT surveyID INT)
 BEGIN
 	SELECT survey_id INTO surveyID
-	FROM questions WHERE question.id = questionID;
+	FROM questions WHERE questions.id = questionID;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -219,4 +219,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-03-17 18:15:52
+-- Dump completed on 2019-03-17 18:31:15
