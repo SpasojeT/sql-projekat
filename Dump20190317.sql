@@ -38,7 +38,7 @@ CREATE TABLE `answers` (
 
 LOCK TABLES `answers` WRITE;
 /*!40000 ALTER TABLE `answers` DISABLE KEYS */;
-INSERT INTO `answers` VALUES (1,'Answer about sausages',5),(2,'Answer about oranges',1),(3,'Second answer about oranges',1),(4,'Answer about lemon',2),(5,'Answer about football',3),(6,'Answer about basketball',4);
+INSERT INTO `answers` VALUES (1,'Answer about sausages',5),(4,'Answer about lemon',2),(5,'Answer about football',3),(6,'Answer about basketball',4);
 /*!40000 ALTER TABLE `answers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -65,7 +65,7 @@ CREATE TABLE `question_options` (
 
 LOCK TABLES `question_options` WRITE;
 /*!40000 ALTER TABLE `question_options` DISABLE KEYS */;
-INSERT INTO `question_options` VALUES (1,'Question option one',1),(2,'Question option two',2),(3,'Question option one',3),(4,'Question option two',4),(5,'Question option one',5);
+INSERT INTO `question_options` VALUES (2,'Question option two',2),(3,'Question option one',3),(4,'Question option two',4),(5,'Question option one',5);
 /*!40000 ALTER TABLE `question_options` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -94,7 +94,7 @@ CREATE TABLE `questions` (
 
 LOCK TABLES `questions` WRITE;
 /*!40000 ALTER TABLE `questions` DISABLE KEYS */;
-INSERT INTO `questions` VALUES (1,'First question','Oranges',1,1),(2,'Second question','Lemon',1,2),(3,'Third question','Sausages',1,3),(4,'Forth question','Football',2,4),(5,'Fifth question','Basketball',2,5),(7,'Sixth question','Football',2,3),(8,'Seventh question','Football',2,4);
+INSERT INTO `questions` VALUES (2,'Second question','Lemon',1,2),(3,'Third question','Sausages',1,3),(4,'Forth question','Football',2,4),(5,'Fifth question','Basketball',2,5),(7,'Sixth question','Football',2,3),(8,'Seventh question','Football',2,4);
 /*!40000 ALTER TABLE `questions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -120,13 +120,35 @@ CREATE TABLE `surveys` (
 
 LOCK TABLES `surveys` WRITE;
 /*!40000 ALTER TABLE `surveys` DISABLE KEYS */;
-INSERT INTO `surveys` VALUES (1,'2013-05-12 14:10:10','Description about first survey','First survey'),(2,'2013-06-12 15:20:10','Description about second survey','Second survey'),(3,'2014-11-12 12:10:10','Description about third survey','Third survey'),(4,'2015-03-16 13:10:20','Description about forth survey','Forth survey'),(5,'2016-12-05 17:30:10','Description about fifth survey','Fifth survey');
+INSERT INTO `surveys` VALUES (2,'2013-06-12 15:20:10','Description about second survey','Second survey'),(3,'2014-11-12 12:10:10','Description about third survey','Third survey'),(4,'2015-03-16 13:10:20','Description about forth survey','Forth survey'),(5,'2016-12-05 17:30:10','Description about fifth survey','Fifth survey');
 /*!40000 ALTER TABLE `surveys` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
 -- Dumping routines for database 'survey_db'
 --
+/*!50003 DROP PROCEDURE IF EXISTS `delete_survey` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_survey`(IN id INT(3))
+BEGIN
+	DELETE FROM answers WHERE EXISTS (SELECT id FROM questions INNER JOIN surveys ON questions.survey_id = surveys.id WHERE questions.survey_id = id AND answers.question_id = questions.id);
+    DELETE FROM question_options WHERE EXISTS (SELECT id FROM questions INNER JOIN surveys ON questions.survey_id = surveys.id WHERE questions.survey_id = id AND question_options.question_id = questions.id);
+    DELETE FROM questions WHERE questions.survey_id = id;
+	DELETE FROM surveys WHERE surveys.id = id;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `select_questions` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -156,4 +178,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-03-17 15:23:29
+-- Dump completed on 2019-03-17 16:11:04
