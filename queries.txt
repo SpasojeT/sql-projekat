@@ -1,0 +1,49 @@
+INSERT INTO surveys (date, description, title) VALUES ("2013-05-12 14:10:10", "Description about first survey", "First survey");
+INSERT INTO surveys (date, description, title) VALUES ("2013-06-12 15:20:10", "Description about second survey", "Second survey");
+INSERT INTO surveys (date, description, title) VALUES ("2014-11-12 12:10:10", "Description about third survey", "Third survey");
+INSERT INTO surveys (date, description, title) VALUES ("2015-03-16 13:10:20", "Description about forth survey", "Forth survey");
+INSERT INTO surveys (date, description, title) VALUES ("2016-12-05 17:30:10", "Description about fifth survey", "Fifth survey");
+
+INSERT INTO questions (name, title, type, survey_id) VALUES ("First question", "Oranges", 1, 1);
+INSERT INTO questions (name, title, type, survey_id) VALUES ("Second question", "Lemon", 1, 2);
+INSERT INTO questions (name, title, type, survey_id) VALUES ("Third question", "Sausages", 1, 3);
+INSERT INTO questions (name, title, type, survey_id) VALUES ("Forth question", "Football", 2, 4);
+INSERT INTO questions (name, title, type, survey_id) VALUES ("Fifth question", "Basketball", 2, 5);
+INSERT INTO questions (name, title, type, survey_id) VALUES ("Sixth question", "Football", 2, 3);
+INSERT INTO questions (name, title, type, survey_id) VALUES ("Seventh question", "Football", 2, 4);
+
+INSERT INTO answers (body, question_id) VALUES ("Answer about oranges", 1);
+INSERT INTO answers (body, question_id) VALUES ("Second answer about oranges", 1);
+INSERT INTO answers (body, question_id) VALUES ("Answer about lemon", 2);
+INSERT INTO answers (body, question_id) VALUES ("Answer about football", 3);
+INSERT INTO answers (body, question_id) VALUES ("Answer about basketball", 4);
+INSERT INTO answers (body, question_id) VALUES ("Answer about sausages", 5);
+
+INSERT INTO question_options (body, question_id) VALUES ("Question option one", 1);
+INSERT INTO question_options (body, question_id) VALUES ("Question option two", 2);
+INSERT INTO question_options (body, question_id) VALUES ("Question option one", 3);
+INSERT INTO question_options (body, question_id) VALUES ("Question option two", 4);
+INSERT INTO question_options (body, question_id) VALUES ("Question option one", 5);
+
+DELIMITER //
+CREATE PROCEDURE select_questions(IN num INT(3), IN title CHAR(10))
+BEGIN
+	SELECT * FROM questions WHERE questions.title = title LIMIT num;
+END //
+DELIMITER ;
+
+CALL SELECT_QUESTIONS(5, "food");
+
+
+
+DELIMITER $$
+CREATE PROCEDURE delete_survey(IN id INT(3))
+BEGIN
+	DELETE FROM answers WHERE EXISTS (SELECT id FROM questions INNER JOIN surveys ON questions.survey_id = surveys.id WHERE questions.survey_id = id AND answers.question_id = questions.id);
+    DELETE FROM question_options WHERE EXISTS (SELECT id FROM questions INNER JOIN surveys ON questions.survey_id = surveys.id WHERE questions.survey_id = id AND question_options.question_id = questions.id);
+    DELETE FROM questions WHERE questions.survey_id = id;
+	DELETE FROM surveys WHERE surveys.id = id;
+END $$
+DELIMITER ;
+
+CALL DELETE_SURVEY(1);
