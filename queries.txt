@@ -34,8 +34,6 @@ DELIMITER ;
 
 CALL SELECT_QUESTIONS(5, "food");
 
-
-
 DELIMITER $$
 CREATE PROCEDURE delete_survey(IN id INT(3))
 BEGIN
@@ -56,10 +54,15 @@ BEGIN
 END //
 DELIMITER ;
 
+CALL GETSURVEYFROMQUESTION(2, @survey_id);
+
+SELECT @survey_id;
+
 DELIMITER //
 CREATE PROCEDURE GetQuestionsFromSurvey(IN surveyID INT)
 BEGIN
 	SELECT * FROM questions WHERE survey_id = surveyID;
 END //
 DELIMITER ;
-	
+
+CALL GETQUESTIONSFROMSURVEY(3);
